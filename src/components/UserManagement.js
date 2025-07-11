@@ -11,7 +11,6 @@ const UserManagement = () => {
   const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('users');
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -309,234 +308,91 @@ const UserManagement = () => {
           <p className="text-blue-100 mt-2">Manage users, roles, and permissions</p>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-8 px-6">
-            <button
-              onClick={() => setActiveTab('users')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === 'users'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <FiUsers className="inline mr-2" />
-              User Management
-            </button>
-            <button
-              onClick={() => setActiveTab('permissions')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === 'permissions'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <FiKey className="inline mr-2" />
-              Permission Management
-            </button>
-          </nav>
-        </div>
-
-        <div className="p-6">
-          {activeTab === 'users' && (
-            <>
-              {/* User Management Tab */}
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Users</h2>
-                <button
-                  onClick={handleCreateUser}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-md"
-                >
-                  <FiPlus size={16} />
-                  Create User
-                </button>
-              </div>
-
-              {/* Search Bar */}
-              <div className="mb-6">
-                <div className="relative">
-                  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                  <input
-                    type="text"
-                    placeholder="Search users by username or role..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Users Table */}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          User
-                        </th>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Role
-                        </th>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Description
-                        </th>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {filteredUsers.map((user) => (
-                        <tr key={user.user_id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 h-12 w-12">
-                                <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-                                  <FiUser className="h-6 w-6 text-white" />
-                                </div>
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">
-                                  {user.username}
-                                </div>
-                                <div className="text-sm text-gray-500">
-                                  ID: {user.user_id}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role_name)}`}>
-                              {user.role_name.charAt(0).toUpperCase() + user.role_name.slice(1).replace('_', ' ')}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                            {user.description}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div className="flex space-x-3">
-                              <button
-                                onClick={() => handleViewUser(user)}
-                                className="text-blue-600 hover:text-blue-900 transition-colors"
-                                title="View Details"
-                              >
-                                <FiUser size={18} />
-                              </button>
-                              <button
-                                onClick={() => handleEditUser(user)}
-                                className="text-green-600 hover:text-green-900 transition-colors"
-                                title="Edit User"
-                              >
-                                <FiEdit size={18} />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteUser(user.user_id, user.username)}
-                                className="text-red-600 hover:text-red-900 transition-colors"
-                                title="Delete User"
-                                disabled={user.user_id === user?.user_id}
-                              >
-                                <FiTrash2 size={18} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {filteredUsers.length === 0 && (
-                  <div className="px-6 py-12 text-center text-gray-500">
-                    <FiUsers className="mx-auto text-gray-400 text-4xl mb-4" />
-                    <p className="text-lg">No users found</p>
-                    <p className="text-sm text-gray-400">Try adjusting your search criteria</p>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-
-          {activeTab === 'permissions' && (
-            <>
-              {/* Permission Management Tab */}
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Permission Management</h2>
-                <p className="text-gray-600">Assign or revoke permissions for each user</p>
-              </div>
-
-              {/* Permission Matrix */}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50">
-                          User
-                        </th>
-                        {permissions.map((permission) => (
-                          <th key={permission.permission_id} className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
-                            <div className="flex flex-col items-center">
-                              <span className="mb-1">{permission.permission_name.replace('_', ' ')}</span>
-                              <span className={`inline-flex px-2 py-1 text-xs rounded-full ${getPermissionBadgeColor(permission.permission_name)}`}>
-                                {permission.description}
-                              </span>
-                            </div>
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {users.map((user) => (
-                        <tr key={user.user_id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap sticky left-0 bg-white">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 h-10 w-10">
-                                <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-                                  <FiUser className="h-5 w-5 text-white" />
-                                </div>
-                              </div>
-                              <div className="ml-3">
-                                <div className="text-sm font-medium text-gray-900">
-                                  {user.username}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {user.role_name.replace('_', ' ')}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          {permissions.map((permission) => {
-                            const hasPermission = hasUserPermission(user.user_id, permission.permission_id);
-                            return (
-                              <td key={permission.permission_id} className="px-4 py-4 text-center">
-                                <button
-                                  onClick={() => handlePermissionToggle(user.user_id, permission.permission_id, hasPermission)}
-                                  className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all ${
-                                    hasPermission
-                                      ? 'bg-green-100 text-green-600 hover:bg-green-200'
-                                      : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
-                                  }`}
-                                  title={hasPermission ? 'Click to revoke' : 'Click to assign'}
-                                >
-                                  {hasPermission ? <FiCheck size={16} /> : <FiX size={16} />}
-                                </button>
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {users.length === 0 && (
-                  <div className="px-6 py-12 text-center text-gray-500">
-                    <FiKey className="mx-auto text-gray-400 text-4xl mb-4" />
-                    <p className="text-lg">No users to manage permissions</p>
-                    <p className="text-sm text-gray-400">Create users first to manage their permissions</p>
-                  </div>
-                )}
-              </div>
-            </>
+        {/* Users Table */}
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    User
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Description
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredUsers.map((user) => (
+                  <tr key={user.user_id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-12 w-12">
+                          <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                            <FiUser className="h-6 w-6 text-white" />
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.username}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            ID: {user.user_id}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role_name)}`}>
+                        {user.role_name.charAt(0).toUpperCase() + user.role_name.slice(1).replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                      {user.description}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-3">
+                        <button
+                          onClick={() => handleViewUser(user)}
+                          className="text-blue-600 hover:text-blue-900 transition-colors"
+                          title="View Details"
+                        >
+                          <FiUser size={18} />
+                        </button>
+                        <button
+                          onClick={() => handleEditUser(user)}
+                          className="text-green-600 hover:text-green-900 transition-colors"
+                          title="Edit User"
+                        >
+                          <FiEdit size={18} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteUser(user.user_id, user.username)}
+                          className="text-red-600 hover:text-red-900 transition-colors"
+                          title="Delete User"
+                          disabled={user.user_id === user?.user_id}
+                        >
+                          <FiTrash2 size={18} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {filteredUsers.length === 0 && (
+            <div className="px-6 py-12 text-center text-gray-500">
+              <FiUsers className="mx-auto text-gray-400 text-4xl mb-4" />
+              <p className="text-lg">No users found</p>
+              <p className="text-sm text-gray-400">Try adjusting your search criteria</p>
+            </div>
           )}
         </div>
       </div>

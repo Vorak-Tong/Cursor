@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import SalesData from './components/SalesData';
 import UserManagement from './components/UserManagement';
 import Loading from './components/Loading';
+import AdminPanel from './components/AdminPanel';
 import './App.css';
 
 // Protected Route component
@@ -83,10 +84,10 @@ function AppContent() {
             } 
           />
           <Route 
-            path="/users" 
+            path="/admin" 
             element={
               <ProtectedRoute requiredRole="admin">
-                <UserManagement />
+                <AdminPanel />
               </ProtectedRoute>
             } 
           />
