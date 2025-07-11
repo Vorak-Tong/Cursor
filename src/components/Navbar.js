@@ -42,10 +42,10 @@ const Navbar = () => {
         {isAdmin() && (
           <li>
             <Link 
-              to="/users" 
-              className={isActiveRoute('/users') ? 'active' : ''}
+              to="/admin" 
+              className={isActiveRoute('/admin') ? 'active' : ''}
             >
-              User Management
+              Admin Panel
             </Link>
           </li>
         )}
