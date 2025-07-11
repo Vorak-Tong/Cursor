@@ -78,6 +78,23 @@ export const apiService = {
     return await api.get('/auth/roles');
   },
 
+  // Permission management endpoints
+  getPermissions: async () => {
+    return await api.get('/auth/permissions');
+  },
+
+  getUserPermissions: async (userId) => {
+    return await api.get(`/auth/users/${userId}/permissions`);
+  },
+
+  assignUserPermission: async (userId, permissionId) => {
+    return await api.post(`/auth/users/${userId}/permissions`, { permission_id: permissionId });
+  },
+
+  revokeUserPermission: async (userId, permissionId) => {
+    return await api.delete(`/auth/users/${userId}/permissions/${permissionId}`);
+  },
+
   // Product management endpoints
   getProducts: async (params = {}) => {
     return await api.get('/products', { params });
